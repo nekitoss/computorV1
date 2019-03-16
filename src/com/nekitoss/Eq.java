@@ -4,6 +4,7 @@ package com.nekitoss;
  * Created by mpochuka on 3/16/19.
  */
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,6 +66,19 @@ public class Eq {
         return false;
     }
 
+    void outputShortForm() {
+        DecimalFormat withoutPlusSign = new DecimalFormat("#.##;- #");
+        DecimalFormat format = new DecimalFormat("+ #.##;- #");
+        String outShort = String.format("%s * X^%d ", withoutPlusSign.format(koefArr[0]), 0);
+
+        for (int i = 1; i <= maxPol; i++) {
+            outShort += String.format("%s * X^%d ", format.format(koefArr[i]), i);
+        }
+        outShort += "= 0";
+        outShort = outShort.replaceAll(",", ".");
+        System.out.println("Reduced form: " + outShort);
+    }
+
     String getFull_eq() {
         return full_eq;
     }
@@ -99,12 +113,31 @@ public class Eq {
             try {
                 eqPart.add(new EqMember(Double.parseDouble(mAddition.group(1)), Integer.parseInt(mAddition.group(2))));
             } catch (NumberFormatException ex){
-                System.err.println("This is not an int!");
+                System.err.println("This is not a number!");
                 System.exit(-1);
             }
             len += mAddition.group().length();
         }
         return len;
+    }
+
+    void trimZeroMembers() {
+        int checkedDegree = 0;
+        for (int i = this.maxPol; i >= 0; i--) {
+            if (koefArr[i] != 0) {
+                checkedDegree = i;
+                break;
+            }
+        }
+        if (checkedDegree != maxPol) {
+            double newKoefMass[] = new double[checkedDegree + 1];
+            for (int i = 0; i <= checkedDegree; i++) {
+                newKoefMass[i] = koefArr[i];
+            }
+            this.koefArr = newKoefMass;
+            this.maxPol = checkedDegree;
+
+        }
     }
 
 }

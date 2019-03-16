@@ -54,6 +54,8 @@ public class Main {
                 }
                 eq.lookupMaxPow();
                 eq.parseMemberList();
+                eq.trimZeroMembers();
+                eq.outputShortForm();
 
 
             }
