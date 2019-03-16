@@ -1,1 +1,1 @@
-java -cp ./src nata.Main "$1"
+java -cp ./src com.nekitoss.Main "$1"
