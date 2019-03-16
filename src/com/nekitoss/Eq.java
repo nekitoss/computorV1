@@ -121,6 +121,13 @@ public class Eq {
         return len;
     }
 
+    void outputPol() {
+        System.out.println("Polynomial degree: " + maxPol);
+        if (maxPol > 2) {
+            Msg.msgExit("The polynomial degree is stricly greater than 2, I won't solve it, human! Solve yourself!");
+        }
+    }
+
     void trimZeroMembers() {
         int checkedDegree = 0;
         for (int i = this.maxPol; i >= 0; i--) {
@@ -137,6 +144,39 @@ public class Eq {
             this.koefArr = newKoefMass;
             this.maxPol = checkedDegree;
 
+        }
+    }
+
+    void solve(){
+        if (maxPol == 0) {
+            if (koefArr[0] == 0)
+                Msg.msgExit("The solution is: all real numbers");
+            else
+                Msg.msgExit("The solution is: empty set");
+        }
+        else if (maxPol == 1)
+            Msg.msgResultExit("The solution is: ", (-1) * MyMath.div(koefArr[0], koefArr[1]));
+        else
+            solveDegree2();
+    }
+
+    private void solveDegree2() {
+        double x1;
+        double x2;
+        double discriminator = 0;
+
+        discriminator = koefArr[1] * koefArr[1] - 4.0 * koefArr[2] * koefArr[0];
+        if (discriminator > 0) {
+            x1 = ((-1.0) * koefArr[1] + MyMath.sqrt(discriminator)) / (2.0 * koefArr[2]);
+            x2 = ((-1.0) * koefArr[1] - MyMath.sqrt(discriminator)) / (2.0 * koefArr[2]);
+            Msg.msgExit("Discriminant is strictly positive, the two solutions are:\n" + x1 + "\n" + x2);
+        } else if (discriminator == 0) {
+            x1 = ((-1.0) * koefArr[1]) / (2.0 * koefArr[2]);
+            Msg.msgExit("Discriminant is zero, the solution is:\n" + x1);
+        } else {
+            x1 = ((-1.0) * koefArr[1]) / (2.0 * koefArr[2]);
+            x2 = MyMath.sqrt((-1.0) * discriminator) / (2.0 * koefArr[2]);
+            Msg.msgExit("Discriminant is strictly negative, the two solutions are:\n" + x1 + " + " + x2 + "i\n" + x1 + " - " + x2 + "i");
         }
     }
 
