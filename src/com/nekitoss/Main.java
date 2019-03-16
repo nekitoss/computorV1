@@ -47,8 +47,16 @@ public class Main {
             args[0] = test[i];
             System.out.printf("T%d: ", i);
             Eq eq = new Eq(args[0]);
-            if (eq.checkEqualsSign())
-                System.out.println("so far so good");
+            if (eq.checkEqualsSign()) {
+                if ((eq.parseLeftPart() + eq.parseRightPart() + 1) != eq.getFull_eq().length())
+                {
+                    Msg.errMsgExit("not all part can be recognized");
+                }
+                eq.lookupMaxPow();
+                eq.parseMemberList();
+
+
+            }
         }
 //        else {
 //            System.out.println("Usage: write equation according to rules in \"\"");

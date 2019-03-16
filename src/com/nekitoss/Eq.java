@@ -17,17 +17,28 @@ public class Eq {
     private Pattern numbersAroundCheckPattern = Pattern.compile(".*\\d.*=.*\\d.*");
     private Pattern additionSubpartPattern = Pattern.compile("([-+]?\\d+\\.?\\d*)\\*[xX]\\^(\\d+)");//" *([-+]? *\\d+) *\\* *[xХ] *\\^ *(\\d)+ *"
 
-    private ArrayList<String> lPartList = new ArrayList<>();
-    private ArrayList<String> rPartList = new ArrayList<>();
+    private ArrayList<String> lStrPartList = new ArrayList<>();
+    private ArrayList<String> rStrPartList = new ArrayList<>();
     private ArrayList<EqMember> lMemberList = new ArrayList<>();
     private ArrayList<EqMember> rMemberList = new ArrayList<>();
 
+    private int maxPol;
+    private double koefArr[];
 
     Eq(String full_eq) {
         if (full_eq != null)
             this.full_eq = full_eq.replaceAll(" ", "");
         else
             Msg.errMsgExit("Passed equation as NUll String!");
+    }
+
+    void parseMemberList() {
+        for (EqMember oneMember : this.lMemberList) {
+            koefArr[oneMember.getPow()] += oneMember.getKoef();
+        }
+        for (EqMember oneMember : this.rMemberList) {
+            koefArr[oneMember.getPow()] += (-1) * oneMember.getKoef();
+        }
     }
 
     boolean checkEqualsSign(){
@@ -54,12 +65,30 @@ public class Eq {
         return false;
     }
 
+    String getFull_eq() {
+        return full_eq;
+    }
+
+    void lookupMaxPow(){
+        int maxPow = 0;
+        for (EqMember oneMember : this.lMemberList) {
+            if (oneMember.getPow() > maxPow)
+                maxPow = oneMember.getPow();
+        }
+        for (EqMember oneMember : this.rMemberList) {
+            if (oneMember.getPow() > maxPow)
+                maxPow = oneMember.getPow();
+        }
+        this.maxPol = maxPow;
+        this.koefArr = new double[this.maxPol + 1];
+    }
+
     int parseLeftPart() {
-        return parsePart(lpart, lPartList, lMemberList);
+        return parsePart(lpart, lStrPartList, lMemberList);
     }
 
     int parseRightPart() {
-        return parsePart(rpart, rPartList, rMemberList);
+        return parsePart(rpart, rStrPartList, rMemberList);
     }
 
     private int parsePart(String str, ArrayList<String> part, ArrayList<EqMember> eqPart) {
