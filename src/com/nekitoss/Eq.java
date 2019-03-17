@@ -28,7 +28,7 @@ public class Eq {
 
     Eq(String full_eq) {
         if (full_eq != null)
-            this.full_eq = full_eq.replaceAll(" ", "");
+            this.full_eq = full_eq.replaceAll("\\s", "");
         else
             Msg.errMsgExit("Passed equation as NUll String!");
     }
